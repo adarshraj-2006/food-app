@@ -5,6 +5,9 @@ import { fileURLToPath } from "url";
 
 import { connectDB } from "./config/db.js";
 import foodRouter from "./routes/foodRoutes.js";
+import userRouter from "./routes/userRoute.js";
+import cartRouter from "./routes/cartRoute.js";
+import orderRouter from "./routes/orderRoute.js";
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -22,8 +25,11 @@ const __dirname = path.dirname(__filename);
 app.use("/images", express.static(path.join(__dirname, "uploads")));
 
 // API routes
-console.log("Loading food routes...");
+console.log("Loading routes...");
 app.use("/api/food", foodRouter);
+app.use("/api/user", userRouter);
+app.use("/api/cart", cartRouter);
+app.use("/api/order", orderRouter);
 app.use("/api/uploads", express.static(path.join(__dirname, "/uploads")));
 
 // Health check
