@@ -1,4 +1,7 @@
 import mongoose from "mongoose";
+import foodModel from "../models/foodModel.js";
+
+
 
 export const connectDB = async () => {
     try {

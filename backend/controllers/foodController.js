@@ -6,10 +6,14 @@ import { successResponse, errorResponse } from "../utils/response.js";
 const addFood = async (req, res) => {
     try {
         // Handle optional image
-        let image_filename = null;
+        let image_filename = null;   // corrected
         if (req.file) {
             image_filename = req.file.filename;
         }
+        if (!req.file) {
+            return errorResponse(res, "Food image is required", 400);
+        }
+
 
         const { name, description, price, category } = req.body;
 
@@ -29,7 +33,7 @@ const addFood = async (req, res) => {
             description,
             price: Number(price),
             category,
-            image: image_filename
+            image: image_filename   // will be null if no file uploaded
         });
 
         await food.save();
@@ -45,6 +49,7 @@ const addFood = async (req, res) => {
 const listFood = async (req, res) => {
     try {
         const food = await foodModel.find({});
+        console.log("my food:", food);
         return successResponse(res, "Food items fetched", food);
     } catch (error) {
         console.log(error);

@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 const foodSchema = new mongoose.Schema({
     name: { type: String, required: true },
-    description: { type: String, required: true },
+    description: { type: String,  },
     price: { type: Number, required: true },
-    image: { type: String, default: null }, // optional
+    image: { type: String, required: true}, // optional
     category: { type: String, required: true }
 });
 

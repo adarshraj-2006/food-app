@@ -16,6 +16,18 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage })
 
+foodRouter.post("/add", async (req, res) => {
+  const food = new Food({
+    name: "Burger",
+    price: 120,
+    category: "Fast Food",
+    image: "burger.png",
+  });
+  await food.save();
+  res.json({ success: true });
+});
+
+
 // Public route
 foodRouter.get("/list", listFood);
 

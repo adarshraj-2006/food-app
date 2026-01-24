@@ -1,4 +1,5 @@
 import express from "express";
+import 'dotenv/config'
 import cors from "cors";
 import path from "path";
 import { fileURLToPath } from "url";
@@ -46,6 +47,6 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(port, () => {
-    console.log(`Server Started on http://localhost:${port}`);
+app.listen(4000, () => {
+    console.log(`Server Started on http://localhost:${4000}`);
 });
