@@ -25,7 +25,7 @@ const loginUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
-        return successResponse(res, "Login Successful", { token });
+        return successResponse(res, "Login Successful", { token, user: { name: user.name, email: user.email, id: user._id } });
 
     } catch (error) {
         console.log(error);
@@ -64,7 +64,7 @@ const registerUser = async (req, res) => {
 
         const user = await newUser.save();
         const token = createToken(user._id);
-        return successResponse(res, "Registration Successful", { token }, 201);
+        return successResponse(res, "Registration Successful", { token, user: { name: user.name, email: user.email, id: user._id } }, 201);
 
     } catch (error) {
         console.log(error);
