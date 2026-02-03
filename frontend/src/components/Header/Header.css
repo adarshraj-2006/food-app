@@ -1,0 +1,134 @@
+/* ===============================
+   HERO HEADER (SWIGGY STYLE)
+================================ */
+
+.header {
+    height: 85vh;
+    width: 100%;
+    margin: 0;
+    position: relative;
+
+    background:
+        linear-gradient(
+            to bottom,
+            rgba(0, 0, 0, 0.45),
+            rgba(0, 0, 0, 0.65)
+        ),
+        url('/header_img.png') no-repeat center center;
+
+    background-size: cover;
+    display: flex;
+    align-items: flex-end;
+    padding: 0 8%;
+}
+
+/* ===============================
+   HEADER CONTENT
+================================ */
+
+.header-contents {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 520px;
+    margin-bottom: 90px;
+    animation: fadeIn 1.6s ease-in-out;
+}
+
+/* ===============================
+   TEXT STYLES
+================================ */
+
+.header-contents h2 {
+    font-weight: 600;
+    color: #ffffff;
+    font-size: clamp(28px, 4.2vw, 48px);
+    line-height: 1.2;
+}
+
+.header-contents p {
+    color: #f2f2f2;
+    font-size: 16px;
+    line-height: 1.6;
+    max-width: 480px;
+}
+
+/* ===============================
+   CTA BUTTON
+================================ */
+
+.header-contents button {
+    border: none;
+    background-color: #ffffff;
+    color: #333;
+    font-weight: 600;
+    padding: 14px 36px;
+    font-size: 15px;
+    border-radius: 999px;
+    cursor: pointer;
+    width: fit-content;
+    transition: all 0.3s ease;
+}
+
+.header-contents button:hover {
+    background-color: tomato;
+    color: white;
+    transform: translateY(-2px);
+}
+
+/* ===============================
+   FADE IN ANIMATION
+================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(15px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ===============================
+   RESPONSIVE DESIGN
+================================ */
+
+@media (max-width: 1024px) {
+    .header {
+        height: 75vh;
+        padding: 0 6%;
+    }
+
+    .header-contents {
+        margin-bottom: 70px;
+    }
+}
+
+@media (max-width: 768px) {
+    .header {
+        height: 65vh;
+    }
+
+    .header-contents {
+        max-width: 100%;
+        margin-bottom: 60px;
+    }
+
+    .header-contents p {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .header {
+        height: 60vh;
+        padding: 0 5%;
+    }
+
+    .header-contents button {
+        padding: 12px 28px;
+        font-size: 14px;
+    }
+}

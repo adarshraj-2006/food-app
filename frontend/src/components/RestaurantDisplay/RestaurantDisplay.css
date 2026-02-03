@@ -1,0 +1,25 @@
+.restaurant-display {
+    width: 80%;
+    margin: 40px auto;
+}
+
+.restaurant-display h2 {
+    font-size: max(2vw, 24px);
+    font-weight: 600;
+    color: #262626;
+    margin-bottom: 20px;
+}
+
+.restaurant-display-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 30px;
+}
+
+.restaurant-display hr {
+    margin: 40px 0 10px 0;
+    height: 2px;
+    background-color: #e2e2e2;
+    border: none;
+}

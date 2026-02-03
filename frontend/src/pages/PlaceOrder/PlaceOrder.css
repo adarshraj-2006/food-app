@@ -1,0 +1,117 @@
+/* ====== Main form container ====== */
+.place-order {
+  display: flex;
+  width: 100%;
+  padding: 20px 10%;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 50px;
+  margin-top: 100px;
+  flex-wrap: wrap; /* make it responsive */
+  box-sizing: border-box;
+}
+
+/* ====== Left section: Delivery Information ====== */
+.place-order-left {
+  flex: 1;
+  min-width: 280px;
+  max-width: 500px;
+}
+
+.place-order-left .title {
+  font-size: 30px;
+  font-weight: 600;
+  margin-bottom: 30px;
+  color: #262626;
+}
+
+.place-order-left input {
+  margin-bottom: 15px;
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  outline-color: tomato;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+/* Multiple fields on one row */
+.place-order-left .multifields {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+/* ====== Right section: Cart Totals ====== */
+.place-order-right {
+  flex: 1;
+  min-width: 280px;
+  max-width: 500px;
+}
+
+.place-order-right .cart-total {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  padding: 20px;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.place-order-right .cart-total h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: #262626;
+}
+
+.cart-total-details {
+  display: flex;
+  justify-content: space-between;
+  color: #555;
+  font-size: 14px;
+}
+
+.cart-total hr {
+  border: none;
+  height: 1px;
+  background-color: #e2e2e2;
+  margin: 10px 0;
+}
+
+.cart-total button {
+  margin-top: 20px;
+  padding: 12px 0;
+  width: 100%;
+  background-color: tomato;
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.cart-total button:hover {
+  background-color: #e35b3b;
+}
+
+/* ====== Responsive ====== */
+@media (max-width: 900px) {
+  .place-order {
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .place-order-left,
+  .place-order-right {
+    max-width: 100%;
+  }
+
+  .place-order-left .multifields {
+    flex-direction: column;
+    gap: 15px;
+  }
+}

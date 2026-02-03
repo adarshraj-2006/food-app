@@ -1,0 +1,34 @@
+/* AppDownload.css */
+.app-download {
+    background: linear-gradient(135deg, #ff7e5f, #feb47b);
+    color: #fff;
+    padding: 2rem;
+    border-radius: 1rem;
+    text-align: center;
+    margin: 2rem auto;
+    max-width: 600px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.app-download p {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    line-height: 1.5;
+}
+
+.app-download-platforms {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 1rem;
+}
+
+.app-download-platforms img {
+    width: 150px;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+.app-download-platforms img:hover {
+    transform: scale(1.05);
+}
