@@ -34,10 +34,10 @@ app.use(cors({
             "http://localhost:3000"
         ].filter(Boolean).map(o => o.replace(/\/$/, "")); // Remove trailing slashes
 
-        if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+        if (!origin || allowedOrigins.includes(origin.replace(/\/$/, "")) || origin.endsWith(".vercel.app")) {
             callback(null, true);
         } else {
-            console.log("Blocked by CORS:", origin);
+            console.log("Blocked by CORS Origin:", origin);
             callback(new Error("Not allowed by CORS"));
         }
     },
