@@ -35,7 +35,7 @@ const AdminLayout = () => (
 );
 
 const App = () => {
-    console.log("Admin API URL:", import.meta.env.VITE_API_BASE_URL);
+    console.log("API:", import.meta.env.VITE_API_BASE_URL);
     const [isAuth, setIsAuth] = useState(!!localStorage.getItem("token"));
 
     useEffect(() => {
