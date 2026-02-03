@@ -2,8 +2,10 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { loginAdmin } from "../../services/admin/admin";
+import { LogIn, Mail, Lock, ShieldCheck } from "lucide-react";
 
-const TOMATO = "#e53935";
+// The generated 4k food image from props/artifact
+const BG_IMAGE = "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070&auto=format&fit=crop";
 
 const Login = () => {
     const navigate = useNavigate();
@@ -28,156 +30,157 @@ const Login = () => {
                 email: data.email.trim(),
                 password: data.password.trim()
             };
+            console.log("Attempting login at:", import.meta.env.VITE_API_BASE_URL);
             const response = await loginAdmin(loginData);
-            console.log("Full Login Response:", response);
+            console.log("Login Response:", response);
 
             if (response.success) {
-                // Check in multiple possible locations for robustness
                 const isAdmin = response.data.isAdmin ?? response.data.user?.isAdmin;
 
                 if (!isAdmin) {
-                    toast.error(`Unauthorized: Admin access only (isAdmin: ${isAdmin})`);
-                    console.error("Access denied. isAdmin flag not found or false.", response.data);
+                    toast.error(`Unauthorized: Admin access only`);
+                    setLoading(false);
                     return;
                 }
                 localStorage.setItem("token", response.data.token);
-                toast.success("Welcome to Tomato 🍅");
+                toast.success("Welcome back, Commander! 🍅");
                 navigate("/");
             } else {
-                toast.error(response.message);
+                toast.error(response.message || "Login failed");
+                setLoading(false);
             }
         } catch (error: any) {
-            toast.error(error.response?.data?.message || "Login failed");
-        } finally {
+            console.error("Login Error Details:", error);
+            const errorMessage = error.response?.data?.message || error.message || "Connection Error";
+            toast.error(`Login Error: ${errorMessage}`);
             setLoading(false);
         }
     };
 
     return (
-        <div
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                background: "#fff5f5",
-            }}
-        >
-            {/* LEFT BRAND SECTION */}
-            <div
-                style={{
-                    flex: 1,
-                    padding: "60px",
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                }}
-            >
-                <h1 style={{ fontSize: "40px", color: TOMATO, marginBottom: "12px" }}>
-                    Tomato 🍅
-                </h1>
-                <p style={{ fontSize: "18px", color: "#555", maxWidth: "420px" }}>
-                    Powerful admin dashboard to manage users, orders, and food items.
-                </p>
-            </div>
-
-            {/* LOGIN CARD */}
-            <div
-                style={{
-                    width: "420px",
-                    background: "#ffffff",
+        <div style={{
+            minHeight: "100vh",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            background: `linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url(${BG_IMAGE})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            padding: "20px",
+            fontFamily: "'Inter', sans-serif"
+        }}>
+            <div style={{
+                width: "100%",
+                maxWidth: "450px",
+                backgroundColor: "rgba(255, 255, 255, 0.95)",
+                backdropFilter: "blur(10px)",
+                borderRadius: "24px",
+                padding: "50px 40px",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.5)",
+                textAlign: "center"
+            }}>
+                <div style={{
+                    backgroundColor: "#e53935",
+                    width: "70px",
+                    height: "70px",
+                    borderRadius: "20px",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    boxShadow: "-10px 0 30px rgba(229,57,53,0.15)",
-                }}
-            >
-                <form
-                    onSubmit={onLogin}
-                    style={{
-                        width: "100%",
-                        padding: "40px",
-                    }}
-                >
-                    <h2
-                        style={{
-                            textAlign: "center",
-                            color: TOMATO,
-                            marginBottom: "8px",
-                        }}
-                    >
-                        Sign In
-                    </h2>
+                    margin: "0 auto 24px",
+                    boxShadow: "0 10px 20px rgba(229, 57, 53, 0.3)"
+                }}>
+                    <ShieldCheck color="#fff" size={35} />
+                </div>
 
-                    <p
-                        style={{
-                            textAlign: "center",
-                            marginBottom: "30px",
-                            color: "#777",
-                        }}
-                    >
-                        Tomato Admin Panel
-                    </p>
+                <h1 style={{
+                    fontSize: "32px",
+                    fontWeight: "900",
+                    color: "#1a1a1a",
+                    marginBottom: "8px",
+                    letterSpacing: "-1px"
+                }}>Tomato Admin</h1>
 
-                    <input
-                        type="email"
-                        name="email"
-                        placeholder="Admin Email"
-                        value={data.email}
-                        onChange={onChangeHandler}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "12px",
-                            marginBottom: "16px",
-                            borderRadius: "8px",
-                            border: "1px solid #f3c2c2",
-                        }}
-                    />
+                <p style={{
+                    color: "#666",
+                    marginBottom: "40px",
+                    fontSize: "16px"
+                }}>Management Console</p>
 
-                    <input
-                        type="password"
-                        name="password"
-                        placeholder="Password"
-                        value={data.password}
-                        onChange={onChangeHandler}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "12px",
-                            marginBottom: "24px",
-                            borderRadius: "8px",
-                            border: "1px solid #f3c2c2",
-                        }}
-                    />
+                <form onSubmit={onLogin} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
+                    <div style={{ position: "relative" }}>
+                        <Mail style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "#999" }} size={20} />
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Admin Email"
+                            value={data.email}
+                            onChange={onChangeHandler}
+                            required
+                            style={{
+                                width: "100%",
+                                padding: "16px 16px 16px 50px",
+                                borderRadius: "14px",
+                                border: "1px solid #e0e0e0",
+                                outline: "none",
+                                fontSize: "15px",
+                                transition: "all 0.3s ease",
+                                backgroundColor: "#f9f9f9"
+                            }}
+                        />
+                    </div>
+
+                    <div style={{ position: "relative" }}>
+                        <Lock style={{ position: "absolute", left: "15px", top: "50%", transform: "translateY(-50%)", color: "#999" }} size={20} />
+                        <input
+                            type="password"
+                            name="password"
+                            placeholder="Password"
+                            value={data.password}
+                            onChange={onChangeHandler}
+                            required
+                            style={{
+                                width: "100%",
+                                padding: "16px 16px 16px 50px",
+                                borderRadius: "14px",
+                                border: "1px solid #e0e0e0",
+                                outline: "none",
+                                fontSize: "15px",
+                                transition: "all 0.3s ease",
+                                backgroundColor: "#f9f9f9"
+                            }}
+                        />
+                    </div>
 
                     <button
                         type="submit"
                         disabled={loading}
                         style={{
                             width: "100%",
-                            padding: "12px",
-                            borderRadius: "8px",
+                            padding: "16px",
+                            borderRadius: "14px",
                             border: "none",
-                            background: TOMATO,
+                            background: "linear-gradient(135deg, #e53935 0%, #c62828 100%)",
                             color: "#fff",
                             fontSize: "16px",
-                            fontWeight: 600,
+                            fontWeight: "700",
                             cursor: "pointer",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            gap: "10px",
+                            boxShadow: "0 10px 20px rgba(229, 57, 53, 0.2)",
+                            marginTop: "10px",
+                            transition: "transform 0.2s"
                         }}
                     >
-                        {loading ? "Signing in..." : "Sign In"}
+                        {loading ? "Verifying..." : (<><LogIn size={20} /> Secure Login</>)}
                     </button>
-
-                    <p
-                        style={{
-                            textAlign: "center",
-                            marginTop: "20px",
-                            fontSize: "14px",
-                            color: "#999",
-                        }}
-                    >
-                        © Tomato Admin
-                    </p>
                 </form>
+
+                <div style={{ marginTop: "40px", paddingTop: "20px", borderTop: "1px solid #eee" }}>
+                    <p style={{ color: "#aaa", fontSize: "13px" }}>Authorized Personnel Only</p>
+                </div>
             </div>
         </div>
     );
