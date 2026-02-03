@@ -1,7 +1,15 @@
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const Navbar = () => {
     const location = useLocation();
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        toast.info("Logged out successfully");
+        navigate("/login");
+    };
 
     const getPageTitle = () => {
         switch (location.pathname) {
@@ -34,18 +42,28 @@ const Navbar = () => {
                     <input type="text" placeholder="Search..." />
                 </div>
 
-                <button className="navbar-icon-btn">
-                    🔔
-                    <span className="notification-badge"></span>
-                </button>
+                <div className="navbar-actions" style={{ display: 'flex', gap: '12px' }}>
+                    <button className="navbar-icon-btn">
+                        🔔
+                        <span className="notification-badge"></span>
+                    </button>
 
-                <div className="profile-dropdown">
-                    <div className="profile-avatar">A</div>
-                    <div className="profile-info">
-                        <span className="profile-name">Admin</span>
-                        <span className="profile-role">Administrator</span>
+                    <button
+                        className="navbar-icon-btn"
+                        onClick={handleLogout}
+                        title="Logout"
+                        style={{ color: '#e53935' }}
+                    >
+                        📤
+                    </button>
+
+                    <div className="profile-dropdown">
+                        <div className="profile-avatar">A</div>
+                        <div className="profile-info">
+                            <span className="profile-name">Admin</span>
+                            <span className="profile-role">Administrator</span>
+                        </div>
                     </div>
-                    <span>▼</span>
                 </div>
             </div>
         </header>

@@ -1,60 +1,28 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { toast } from 'react-toastify';
+import { listUsers } from '../../services/admin/admin';
 
 interface User {
     _id: string;
     name: string;
     email: string;
     isAdmin: boolean;
+    isVerified: boolean;
 }
 
 const Users = () => {
     const [users, setUsers] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const url = 'http://localhost:4000';
-
     const fetchUsers = async () => {
         try {
-            const response = await axios.get(`${url}/api/user/list`);
-            if (response.data.success) {
-                setUsers(response.data.data || []);
+            const response = await listUsers();
+            if (response.success) {
+                setUsers(response.data || []);
             }
         } catch (error) {
             console.error('Error fetching users:', error);
-            // Show sample data if backend not available
-            setUsers([
-                {
-                    _id: '1',
-                    name: 'John Doe',
-                    email: 'john@example.com',
-                    isAdmin: false,
-                },
-                {
-                    _id: '2',
-                    name: 'Jane Smith',
-                    email: 'jane@example.com',
-                    isAdmin: false,
-                },
-                {
-                    _id: '3',
-                    name: 'Admin User',
-                    email: 'admin@tomato.com',
-                    isAdmin: true,
-                },
-                {
-                    _id: '4',
-                    name: 'Rahul Kumar',
-                    email: 'rahul@example.com',
-                    isAdmin: false,
-                },
-                {
-                    _id: '5',
-                    name: 'Priya Sharma',
-                    email: 'priya@example.com',
-                    isAdmin: false,
-                },
-            ]);
+            toast.error("Error fetching users");
         } finally {
             setLoading(false);
         }
@@ -131,7 +99,9 @@ const Users = () => {
                                             </span>
                                         </td>
                                         <td>
-                                            <span className="status-badge delivered">Active</span>
+                                            <span className={`status-badge ${user.isVerified ? 'delivered' : 'cancelled'}`}>
+                                                {user.isVerified ? '✅ Verified' : '❌ Not Verified'}
+                                            </span>
                                         </td>
                                     </tr>
                                 ))

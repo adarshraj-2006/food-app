@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { toast } from 'react-toastify';
+import { listOrders, updateStatus } from '../../services/admin/admin';
 
 interface Order {
     _id: string;
@@ -17,71 +17,30 @@ const Orders = () => {
     const [orders, setOrders] = useState<Order[]>([]);
     const [loading, setLoading] = useState(true);
 
-    const url = 'http://localhost:4000';
-
     const fetchOrders = async () => {
         try {
-            const response = await axios.get(`${url}/api/order/list`);
-            if (response.data.success) {
-                setOrders(response.data.data || []);
+            const response = await listOrders();
+            if (response.success) {
+                setOrders(response.data || []);
             }
         } catch (error) {
             console.error('Error fetching orders:', error);
-            // Show sample data if backend not available
-            setOrders([
-                {
-                    _id: '1',
-                    userId: 'user1',
-                    items: [{ name: 'Margherita Pizza', quantity: 2, price: 299 }],
-                    amount: 598,
-                    address: { street: '123 Main St', city: 'Bangalore' },
-                    status: 'Food Processing',
-                    date: new Date().toISOString(),
-                    payment: true,
-                },
-                {
-                    _id: '2',
-                    userId: 'user2',
-                    items: [{ name: 'Butter Chicken', quantity: 1, price: 349 }],
-                    amount: 349,
-                    address: { street: '456 Oak Ave', city: 'Mumbai' },
-                    status: 'Delivered',
-                    date: new Date().toISOString(),
-                    payment: true,
-                },
-                {
-                    _id: '3',
-                    userId: 'user3',
-                    items: [{ name: 'Veg Biryani', quantity: 3, price: 199 }],
-                    amount: 597,
-                    address: { street: '789 Pine Rd', city: 'Delhi' },
-                    status: 'Out for Delivery',
-                    date: new Date().toISOString(),
-                    payment: false,
-                },
-            ]);
+            toast.error('Error fetching orders');
         } finally {
             setLoading(false);
         }
     };
 
-    const updateStatus = async (orderId: string, newStatus: string) => {
+    const handleStatusUpdate = async (orderId: string, newStatus: string) => {
         try {
-            const response = await axios.post(`${url}/api/order/status`, {
-                orderId,
-                status: newStatus,
-            });
-            if (response.data.success) {
+            const response = await updateStatus(orderId, newStatus);
+            if (response.success) {
                 toast.success('Order status updated!');
                 fetchOrders();
             }
         } catch (error) {
             console.error('Error updating status:', error);
             toast.error('Failed to update status');
-            // Update locally for demo
-            setOrders(orders.map(order =>
-                order._id === orderId ? { ...order, status: newStatus } : order
-            ));
         }
     };
 
@@ -182,7 +141,7 @@ const Orders = () => {
                                         <td>
                                             <select
                                                 value={order.status}
-                                                onChange={(e) => updateStatus(order._id, e.target.value)}
+                                                onChange={(e) => handleStatusUpdate(order._id, e.target.value)}
                                                 className="form-input form-select"
                                                 style={{ width: '160px', padding: '8px 12px' }}
                                             >

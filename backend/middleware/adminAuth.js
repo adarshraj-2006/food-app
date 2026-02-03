@@ -3,7 +3,7 @@ import { errorResponse } from "../utils/response.js";
 
 const adminAuth = async (req, res, next) => {
     try {
-        const userId = req.body.userId || req.headers.userid; // Handle both cases
+        const userId = req.userId || (req.body && req.body.userId) || req.headers.userid; // Handle multiple cases safely
 
         if (!userId) {
             return errorResponse(res, "User ID missing", 400);

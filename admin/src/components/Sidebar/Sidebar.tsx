@@ -23,21 +23,17 @@ const Sidebar = () => {
 
             <nav className="sidebar-nav">
                 <div className="nav-section">
-                    <NavLink
-                        to="/"
-                        end
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                    >
-                        <span className="nav-icon">📊</span>
-                        Dashboard
-                    </NavLink>
-                    <NavLink
-                        to="/orders"
-                        className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
-                    >
-                        <span className="nav-icon">📦</span>
-                        Orders
-                    </NavLink>
+                    {mainNavItems.map((item) => (
+                        <NavLink
+                            key={item.path}
+                            to={item.path}
+                            end={item.path === '/'}
+                            className={({ isActive }) => `nav-item ${isActive ? 'active' : ''}`}
+                        >
+                            <span className="nav-icon">{item.icon}</span>
+                            {item.label}
+                        </NavLink>
+                    ))}
                 </div>
 
                 <div className="nav-section">

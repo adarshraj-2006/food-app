@@ -25,7 +25,18 @@ const loginUser = async (req, res) => {
         }
 
         const token = createToken(user._id);
-        return successResponse(res, "Login Successful", { token, user: { name: user.name, email: user.email, id: user._id } });
+        const responseData = {
+            token,
+            isAdmin: Boolean(user.isAdmin), // Added at top level for easier access
+            user: {
+                name: user.name,
+                email: user.email,
+                id: user._id,
+                isAdmin: Boolean(user.isAdmin)
+            }
+        };
+        console.log(`Login attempt for ${email}: isAdmin = ${user.isAdmin}`);
+        return successResponse(res, "Login Successful", responseData);
 
     } catch (error) {
         console.log(error);
@@ -72,4 +83,14 @@ const registerUser = async (req, res) => {
     }
 }
 
-export { loginUser, registerUser };
+const listUsers = async (req, res) => {
+    try {
+        const users = await userModel.find({});
+        res.json({ success: true, data: users });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+}
+
+export { loginUser, registerUser, listUsers };

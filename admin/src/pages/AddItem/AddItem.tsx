@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import axios from 'axios';
+
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
+import { addFood } from '../../services/admin/admin';
 
 const AddItem = () => {
     const navigate = useNavigate();
@@ -14,8 +15,6 @@ const AddItem = () => {
         category: 'Salad',
     });
     const [image, setImage] = useState<File | null>(null);
-
-    const url = 'http://localhost:4000';
 
     const categories = [
         'Salad',
@@ -70,12 +69,12 @@ const AddItem = () => {
         data.append('image', image);
 
         try {
-            const response = await axios.post(`${url}/api/food/add`, data);
-            if (response.data.success) {
+            const response = await addFood(data);
+            if (response.success) {
                 toast.success('Food item added successfully!');
                 navigate('/food-list');
             } else {
-                toast.error(response.data.message || 'Failed to add item');
+                toast.error(response.message || 'Failed to add item');
             }
         } catch (error) {
             console.error('Error adding food:', error);
