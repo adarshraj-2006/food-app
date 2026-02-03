@@ -16,6 +16,7 @@ const Login = () => {
     });
 
     const [loading, setLoading] = useState(false);
+    const [slowServer, setSlowServer] = useState(false);
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
         setData({ ...data, [e.target.name]: e.target.value });
@@ -24,6 +25,9 @@ const Login = () => {
     const onLogin = async (e: React.FormEvent) => {
         e.preventDefault();
         setLoading(true);
+        setSlowServer(false);
+
+        const timer = setTimeout(() => setSlowServer(true), 6000);
 
         try {
             const loginData = {
@@ -32,6 +36,8 @@ const Login = () => {
             };
             console.log("Attempting login at:", import.meta.env.VITE_API_BASE_URL);
             const response = await loginAdmin(loginData);
+            clearTimeout(timer);
+            setSlowServer(false);
             console.log("Login Response:", response);
 
             if (response.success) {
@@ -50,6 +56,8 @@ const Login = () => {
                 setLoading(false);
             }
         } catch (error: any) {
+            clearTimeout(timer);
+            setSlowServer(false);
             console.error("Login Error Details:", error);
             const errorMessage = error.response?.data?.message || error.message || "Connection Error";
             toast.error(`Login Error: ${errorMessage}`);
@@ -176,6 +184,18 @@ const Login = () => {
                     >
                         {loading ? "Verifying..." : (<><LogIn size={20} /> Secure Login</>)}
                     </button>
+
+                    {slowServer && (
+                        <p style={{
+                            marginTop: "15px",
+                            color: "#d32f2f",
+                            fontSize: "13px",
+                            fontWeight: "500",
+                            animation: "pulse 2s infinite"
+                        }}>
+                            ⏳ Server is waking up (Cold Start)... <br /> Please stay on this page.
+                        </p>
+                    )}
                 </form>
 
                 <div style={{ marginTop: "40px", paddingTop: "20px", borderTop: "1px solid #eee" }}>

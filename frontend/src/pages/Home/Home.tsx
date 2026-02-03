@@ -52,7 +52,11 @@ const Home = () => {
             {isLoading ? (
               <div className="py-20 flex flex-col items-center gap-4">
                 <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
-                <p className="text-neutral-500 dark:text-neutral-400 font-medium">Fetching the menu...</p>
+                <p className="text-neutral-900 dark:text-white font-bold text-xl">Waking up the Kitchen...</p>
+                <p className="text-neutral-500 dark:text-neutral-400 font-medium text-center">
+                  Our server is currently starting up (taking about 15s). <br />
+                  Your delicious menu is on its way! 🍕
+                </p>
               </div>
             ) : food_list.length === 0 ? (
               <div className="py-20 text-center bg-neutral-100 dark:bg-neutral-800/50 rounded-[32px] border-2 border-dashed border-neutral-200 dark:border-neutral-700">
