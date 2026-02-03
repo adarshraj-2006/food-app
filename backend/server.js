@@ -18,15 +18,29 @@ const port = process.env.PORT || 4000;
 
 // Middleware
 app.use(express.json());
+console.log("Environment Status:");
+console.log("- MONGODB_URI:", process.env.MONGODB_URI ? "Defined (Length: " + process.env.MONGODB_URI.length + ")" : "MISSING");
+console.log("- FRONTEND_URL:", process.env.FRONTEND_URL || "MISSING");
+console.log("- ADMIN_URL:", process.env.ADMIN_URL || "MISSING");
+
 app.use(cors({
-    origin: [
-        process.env.CLIENT_URL,
-        process.env.ADMIN_URL,
-        process.env.FRONTEND_URL,
-        "http://localhost:5173",
-        "http://localhost:5174",
-        "http://localhost:3000"
-    ].filter(Boolean),
+    origin: (origin, callback) => {
+        const allowedOrigins = [
+            process.env.CLIENT_URL,
+            process.env.ADMIN_URL,
+            process.env.FRONTEND_URL,
+            "http://localhost:5173",
+            "http://localhost:5174",
+            "http://localhost:3000"
+        ].filter(Boolean).map(o => o.replace(/\/$/, "")); // Remove trailing slashes
+
+        if (!origin || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+            callback(null, true);
+        } else {
+            console.log("Blocked by CORS:", origin);
+            callback(new Error("Not allowed by CORS"));
+        }
+    },
     credentials: true
 }));
 

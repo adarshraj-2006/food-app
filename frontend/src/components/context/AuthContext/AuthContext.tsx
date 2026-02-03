@@ -4,7 +4,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import axios from "axios";
 
-const MatchUrl = import.meta.env.VITE_API_BASE_URL || "http://localhost:4000";
+const MatchUrl = (import.meta.env.VITE_API_BASE_URL || "http://localhost:4000").replace(/\/$/, "");
 
 const AuthContext = createContext(null);
 
