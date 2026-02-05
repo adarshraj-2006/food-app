@@ -39,6 +39,7 @@ const PORT = process.env.PORT || 4000;
 // --------------------------------
 const allowedOrigins = [
   process.env.CLIENT_URL,
+  "https://tomato-topaz-tau.vercel.app",
   process.env.ADMIN_URL,
   "http://localhost:5173",
   "http://localhost:5174",

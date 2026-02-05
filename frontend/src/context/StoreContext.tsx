@@ -6,6 +6,7 @@ export const StoreContext = createContext(null);
 export const StoreContextProvider = (props) => {
     const url = (import.meta.env.VITE_API_BASE_URL || "http://localhost:4000").replace(/\/$/, "");
     console.log("Current API URL:", url);
+
     const [food_list, setFoodList] = useState([]);
     const [cartItems, setCartItems] = useState({});
     const [token, setToken] = useState("");
@@ -13,14 +14,21 @@ export const StoreContextProvider = (props) => {
 
     // Add item to cart
     const addToCart = async (itemId) => {
-        if (!cartItems[itemId]) {
-            setCartItems((prev) => ({ ...prev, [itemId]: 1 }));
-        }
-        else {
-            setCartItems((prev) => ({ ...prev, [itemId]: prev[itemId] + 1 }));
-        }
+        setCartItems((prev) => ({
+            ...prev,
+            [itemId]: prev[itemId] ? prev[itemId] + 1 : 1
+        }));
+
         if (token) {
-            await axios.post(url + "/api/cart/add", { itemId }, { headers: { token } });
+            try {
+                await axios.post(
+                    url + "/api/cart/add",
+                    { itemId },
+                    { headers: { token } }
+                );
+            } catch (err) {
+                console.error("Add to cart failed:", err);
+            }
         }
     };
 
@@ -35,12 +43,21 @@ export const StoreContextProvider = (props) => {
             }
             return newCart;
         });
+
         if (token) {
-            await axios.post(url + "/api/cart/remove", { itemId }, { headers: { token } });
+            try {
+                await axios.post(
+                    url + "/api/cart/remove",
+                    { itemId },
+                    { headers: { token } }
+                );
+            } catch (err) {
+                console.error("Remove from cart failed:", err);
+            }
         }
     };
 
-    // Fetch food list from backend
+    // Fetch food list
     const fetchFoodList = async () => {
         setIsLoading(true);
         try {
@@ -55,59 +72,63 @@ export const StoreContextProvider = (props) => {
         }
     };
 
+    // Load cart from backend
     const loadCartData = async (token) => {
         try {
-            const response = await axios.get(url + "/api/cart/get", { headers: { token } });
+            const response = await axios.get(
+                url + "/api/cart/get",
+                { headers: { token } }
+            );
             setCartItems(response.data.data || {});
         } catch (error) {
-            console.error(error);
+            console.error("Error loading cart:", error);
         }
-    }
+    };
 
-    // Load data on mount
+    // Initial load
     useEffect(() => {
-        async function loadData() {
+        const loadData = async () => {
             await fetchFoodList();
-            if (localStorage.getItem("token")) {
-                setToken(localStorage.getItem("token"));
-                await loadCartData(localStorage.getItem("token"));
+
+            const savedToken = localStorage.getItem("token");
+            if (savedToken) {
+                setToken(savedToken);
+                await loadCartData(savedToken);
             } else {
-                const savedCart = localStorage.getItem('cartItems');
+                const savedCart = localStorage.getItem("cartItems");
                 if (savedCart) {
                     setCartItems(JSON.parse(savedCart));
                 }
             }
-        }
+        };
+
         loadData();
     }, []);
 
-    // Save cart to localStorage whenever it changes (only if no token?? or always?)
-    // If token exists, backend is source of truth. But saving to local is backup/sync.
+    // Save cart locally if not logged in
     useEffect(() => {
         if (!token) {
-            localStorage.setItem('cartItems', JSON.stringify(cartItems));
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
         }
     }, [cartItems, token]);
 
+    // Total price
     const getTotalCartAmount = () => {
         let totalAmount = 0;
         for (const itemId in cartItems) {
-            if (cartItems[itemId] > 0) {
-                const itemInfo = food_list.find((product) => product._id === itemId);
-                if (itemInfo) {
-                    totalAmount += itemInfo.price * cartItems[itemId];
-                }
+            const itemInfo = food_list.find(item => item._id === itemId);
+            if (itemInfo) {
+                totalAmount += itemInfo.price * cartItems[itemId];
             }
         }
         return totalAmount;
     };
 
+    // Total quantity
     const getTotalItemCount = () => {
         let totalCount = 0;
         for (const itemId in cartItems) {
-            if (cartItems[itemId] > 0) {
-                totalCount += cartItems[itemId];
-            }
+            totalCount += cartItems[itemId];
         }
         return totalCount;
     };
@@ -127,7 +148,6 @@ export const StoreContextProvider = (props) => {
         setToken
     };
 
-
     return (
         <StoreContext.Provider value={contextValue}>
             {props.children}
@@ -135,6 +155,7 @@ export const StoreContextProvider = (props) => {
     );
 };
 
+// Custom hook
 export const useStore = () => {
     const context = useContext(StoreContext);
     if (!context) {
