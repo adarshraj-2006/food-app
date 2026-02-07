@@ -38,6 +38,7 @@ const PORT = process.env.PORT || 4000;
 // Allowed Origins
 // --------------------------------
 const allowedOrigins = [
+  process.env.FRONTEND_URL,
   process.env.CLIENT_URL,
   "https://tomato-topaz-tau.vercel.app",
   process.env.ADMIN_URL,
@@ -69,8 +70,8 @@ app.use(
   })
 );
 
-// Preflight support (VERY IMPORTANT)
-app.options("*", cors());
+// Preflight support (FIXED wildcard for Node 25+)
+app.options("/(.*)", cors());
 
 // --------------------------------
 // Global Middleware
@@ -82,7 +83,7 @@ app.use(express.json());
 // --------------------------------
 console.log("🔍 Environment Check:");
 console.log("MONGODB_URI:", process.env.MONGODB_URI ? "✅ Set" : "❌ Missing");
-console.log("CLIENT_URL:", process.env.CLIENT_URL || "❌ Missing");
+console.log("FRONTEND_URL/CLIENT_URL:", (process.env.FRONTEND_URL || process.env.CLIENT_URL) ? "✅ Set" : "❌ Missing");
 console.log("ADMIN_URL:", process.env.ADMIN_URL || "⚠️ Not set");
 
 // --------------------------------
