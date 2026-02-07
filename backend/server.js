@@ -70,9 +70,6 @@ app.use(
   })
 );
 
-// Preflight support (FIXED wildcard for Node 25+)
-app.options("/(.*)", cors());
-
 // --------------------------------
 // Global Middleware
 // --------------------------------
