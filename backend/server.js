@@ -70,6 +70,28 @@ app.use(
   })
 );
 
+// Additional explicit CORS header middleware: ensures responses include
+// Access-Control-Allow-* headers when the request Origin matches allowedOrigins.
+// This is a safe fallback to help deployments that may run a different build
+// or where the `cors` package callback didn't set the header as expected.
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,POST,PUT,DELETE,PATCH,OPTIONS"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization, token, X-Requested-With"
+    );
+  }
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
+});
+
 // --------------------------------
 // Global Middleware
 // --------------------------------
