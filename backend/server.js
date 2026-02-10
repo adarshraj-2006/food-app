@@ -37,38 +37,17 @@ const PORT = process.env.PORT || 4000;
 // --------------------------------
 // Allowed Origins
 // --------------------------------
-const allowedOrigins = [
-  process.env.FRONTEND_URL,
-  process.env.CLIENT_URL,
-  "https://tomato-topaz-tau.vercel.app",
-  process.env.ADMIN_URL,
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:3000",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-].filter(Boolean);
-
-// --------------------------------
-// CORS (FIXED & SAFE)
-// --------------------------------
 app.use(
   cors({
-    origin: (origin, callback) => {
-      if (!origin) return callback(null, true); // allow curl/postman
-
-      if (allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-
-      console.warn("❌ CORS blocked:", origin);
-      return callback(null, false); // ❗ never throw
-    },
+    origin: true, 
     credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "token", "X-Requested-With"],
   })
 );
+
+// Preflight support
+app.options("*", cors());
 
 // Additional explicit CORS header middleware: ensures responses include
 // Access-Control-Allow-* headers when the request Origin matches allowedOrigins.
