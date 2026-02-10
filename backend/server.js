@@ -47,7 +47,7 @@ app.use(
 );
 
 // Preflight support
-app.options("*", cors());
+app.options(/.*/, cors());
 
 // Additional explicit CORS header middleware: ensures responses include
 // Access-Control-Allow-* headers when the request Origin matches allowedOrigins.
