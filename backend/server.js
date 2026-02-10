@@ -5,7 +5,7 @@
  * - Node.js + Express
  * - MongoDB Atlas
  * - Vercel Frontend + Admin
- * - Correct CORS (NO crashes)
+ * - CORS: ALLOW ALL (dev/debug)
  */
 
 import express from "express";
@@ -35,54 +35,32 @@ const app = express();
 const PORT = process.env.PORT || 4000;
 
 // --------------------------------
-// Allowed Origins
+// 🔥 CORS (ALLOW ALL — SINGLE SOURCE)
 // --------------------------------
 app.use(
   cors({
-    origin: true, 
-    credentials: true,
+    origin: true,        // allow all origins
+    credentials: true,   // allow cookies / auth
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization", "token", "X-Requested-With"],
   })
 );
 
-// Preflight support
+// Preflight support (Express v5 safe)
 app.options(/.*/, cors());
-
-// Additional explicit CORS header middleware: ensures responses include
-// Access-Control-Allow-* headers when the request Origin matches allowedOrigins.
-// This is a safe fallback to help deployments that may run a different build
-// or where the `cors` package callback didn't set the header as expected.
-app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (origin && allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET,POST,PUT,DELETE,PATCH,OPTIONS"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization, token, X-Requested-With"
-    );
-  }
-  if (req.method === "OPTIONS") return res.sendStatus(200);
-  next();
-});
 
 // --------------------------------
 // Global Middleware
 // --------------------------------
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
 // --------------------------------
 // Environment Debug (safe)
 // --------------------------------
 console.log("🔍 Environment Check:");
 console.log("MONGODB_URI:", process.env.MONGODB_URI ? "✅ Set" : "❌ Missing");
-console.log("FRONTEND_URL/CLIENT_URL:", (process.env.FRONTEND_URL || process.env.CLIENT_URL) ? "✅ Set" : "❌ Missing");
-console.log("ADMIN_URL:", process.env.ADMIN_URL || "⚠️ Not set");
+console.log("PORT:", PORT);
 
 // --------------------------------
 // Database Connection
