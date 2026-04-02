@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext/AuthContext';
 import { useStore } from '../../../context/StoreContext';
-import { Search, ShoppingBag, MapPin, ChevronDown, User, Package, Wallet, Settings, LogOut, Heart, Bell, HelpCircle, Menu, X, Percent, Users } from 'lucide-react';
+import { Search, ShoppingBag, MapPin, ChevronDown, User, Package, Wallet, Settings, LogOut, Heart, Bell, HelpCircle, Menu, X, Percent, Users, Home, TrendingUp, UtensilsCrossed, Briefcase, Handshake, Shield, FileText, Phone, Store, Flame } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -10,19 +10,28 @@ const Navbar: React.FC = () => {
   const totalItems = getTotalItemCount();
   const navigate = useNavigate();
   const location = useLocation();
-  const [showDropdown, setShowDropdown] = useState(false);
   const [showMobileMenu, setShowMobileMenu] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const [address, setAddress] = useState({ title: 'Koramangala', subtitle: 'Bangalore, India' });
 
   useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setShowDropdown(false);
-      }
-    };
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        async (position) => {
+        const { latitude, longitude } = position.coords;
+        try {
+          const res = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${latitude}&lon=${longitude}`);
+          const data = await res.json();
+          if (data && data.address) {
+             const city = data.address.city || data.address.town || data.address.suburb || 'Current Location';
+             const state = data.address.state || data.address.country || '';
+             setAddress({ title: city, subtitle: state });
+          }
+        } catch (error) {
+          console.error("Error fetching location", error);
+        }
+      });
+    }
   }, []);
 
   const scrollToElement = (element: HTMLElement) => {
@@ -87,7 +96,7 @@ const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     logout();
-    setShowDropdown(false);
+    setShowMobileMenu(false);
     navigate('/');
   };
 
@@ -115,7 +124,7 @@ const Navbar: React.FC = () => {
               <span className="text-2xl font-black text-neutral-900 dark:text-white tracking-tight group-hover:text-orange-500 transition-all">Tomato.</span>
             </Link>
 
-            <div className="hidden xl:flex items-center gap-3 group cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 p-2 pr-4 rounded-full border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 transition-all">
+            <div className="hidden xl:flex items-center gap-3 group cursor-pointer hover:bg-neutral-50 dark:hover:bg-neutral-800 p-2 pr-4 rounded-full border border-transparent hover:border-neutral-200 dark:hover:border-neutral-700 transition-all" onClick={() => {}}>
               <div className="w-8 h-8 rounded-full bg-orange-50 dark:bg-orange-900/10 flex items-center justify-center">
                 <MapPin className="w-4 h-4 text-orange-600 dark:text-orange-400" />
               </div>
@@ -124,7 +133,7 @@ const Navbar: React.FC = () => {
                   <span>Home</span>
                   <ChevronDown size={14} className="group-hover:translate-y-0.5 transition-transform" />
                 </div>
-                <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate max-w-[140px]">Koramangala, Bangalore</p>
+                <p className="text-xs text-neutral-500 dark:text-neutral-400 truncate max-w-[140px]">{address.title}, {address.subtitle}</p>
               </div>
             </div>
           </div>
@@ -167,73 +176,9 @@ const Navbar: React.FC = () => {
               <span className="hidden sm:inline">Cart</span>
             </Link>
 
-            {/* Auth Section */}
-            {isAuthenticated && user ? (
-              <div className="relative" ref={dropdownRef}>
-                <button
-                  onClick={() => setShowDropdown(!showDropdown)}
-                  className="flex items-center gap-2 pl-2 rounded-full hover:bg-neutral-50 dark:hover:bg-neutral-800 transition-all border border-transparent hover:border-neutral-200 group"
-                >
-                  <div className="w-10 h-10 rounded-full bg-orange-100 dark:bg-neutral-800 flex items-center justify-center text-orange-600 dark:text-orange-400 font-bold text-lg shadow-inner group-hover:bg-orange-500 group-hover:text-white transition-colors">
-                    {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                  </div>
-                </button>
-
-                {showDropdown && (
-                  <div className="absolute right-0 top-full mt-2 w-72 bg-white dark:bg-neutral-900 rounded-2xl shadow-xl border border-neutral-100 dark:border-neutral-800 overflow-hidden z-50 animate-in fade-in zoom-in-95 duration-200">
-                    <div className="p-5 bg-orange-50 dark:bg-neutral-800/50 border-b border-orange-100 dark:border-neutral-800">
-                      <div className="flex items-center gap-4">
-                        <div className="w-12 h-12 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-xl shadow-lg shadow-orange-500/30">
-                          {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
-                        </div>
-                        <div>
-                          <p className="font-bold text-lg text-neutral-900 dark:text-white leading-tight">{user.name}</p>
-                          <p className="text-sm text-neutral-500 dark:text-neutral-400">{user.email}</p>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="p-2 max-h-[300px] overflow-y-auto custom-scrollbar">
-                      {menuItems.map((item) => (
-                        <Link
-                          key={item.path}
-                          to={item.path}
-                          onClick={() => setShowDropdown(false)}
-                          className="flex items-center gap-3 px-3 py-3 rounded-xl text-neutral-600 dark:text-neutral-300 hover:bg-neutral-50 dark:hover:bg-neutral-800 hover:text-orange-600 dark:hover:text-orange-400 transition-all font-medium"
-                        >
-                          <div className="p-2 rounded-lg bg-neutral-100 dark:bg-neutral-800 group-hover:bg-orange-100 dark:group-hover:bg-orange-900/20 text-neutral-500 dark:text-neutral-400 group-hover:text-orange-600 transition-colors">
-                            <item.icon className="w-4 h-4" />
-                          </div>
-                          {item.label}
-                        </Link>
-                      ))}
-                    </div>
-                    <div className="p-2 border-t border-neutral-100 dark:border-neutral-800">
-                      <button
-                        onClick={handleLogout}
-                        className="flex items-center gap-3 px-4 py-3 rounded-xl text-red-600 hover:bg-red-50 dark:hover:bg-red-900/10 transition-colors w-full font-medium"
-                      >
-                        <LogOut className="w-5 h-5" />
-                        Sign Out
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            ) : (
-              <div className="flex items-center gap-2">
-                <Link
-                  to="/login"
-                  className="flex items-center justify-center px-6 py-2.5 rounded-lg bg-orange-500 text-white font-bold hover:bg-orange-600 transition-all shadow-lg shadow-orange-500/25 active:scale-95"
-                >
-                  <User size={18} className="mr-2" />
-                  Sign In
-                </Link>
-              </div>
-            )}
-
-            {/* Mobile Menu Toggle */}
+            {/* Main Menu Toggle */}
             <button
-              className="lg:hidden p-2 text-neutral-600 dark:text-neutral-300"
+              className="p-2 text-neutral-600 dark:text-neutral-300 hover:text-orange-600 hover:bg-orange-50 dark:hover:bg-neutral-800 rounded-full transition-colors"
               onClick={() => setShowMobileMenu(!showMobileMenu)}
             >
               {showMobileMenu ? <X /> : <Menu />}
@@ -244,30 +189,118 @@ const Navbar: React.FC = () => {
 
       </div>
 
-      {/* Mobile Menu Overlay */}
+      {/* Menu Overlay */}
       {showMobileMenu && (
-        <div className="lg:hidden fixed inset-0 top-[80px] bg-white dark:bg-neutral-900 z-40 overflow-y-auto border-t border-neutral-200 dark:border-neutral-800">
-          <div className="p-4 space-y-4 animate-in slide-in-from-top-5 duration-200">
-            {/* Mobile Location */}
-            <div className="flex items-center gap-3 p-4 bg-neutral-50 dark:bg-neutral-800 rounded-2xl">
-              <MapPin className="text-orange-500" />
-              <div>
-                <p className="font-bold text-neutral-900 dark:text-white">Home - Koramangala</p>
-                <p className="text-xs text-neutral-500">Bangalore, India</p>
+        <div className="fixed inset-0 top-[80px] bg-white/50 backdrop-blur-sm dark:bg-neutral-900/50 z-40 overflow-y-auto border-t border-neutral-200 dark:border-neutral-800 flex justify-end" onClick={(e) => {
+          if (e.target === e.currentTarget) setShowMobileMenu(false);
+        }}>
+          <div className="w-full max-w-sm bg-white dark:bg-neutral-900 min-h-screen p-6 space-y-8 animate-in slide-in-from-right duration-300 shadow-2xl border-l border-neutral-100 dark:border-neutral-800">
+            
+            {/* User Profile Info / Greeting */}
+            {isAuthenticated && user ? (
+              <div className="flex items-center gap-4 pb-6 border-b border-neutral-100 dark:border-neutral-800">
+                <div className="w-14 h-14 rounded-full bg-orange-500 flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-orange-500/30">
+                  {user.name ? user.name.charAt(0).toUpperCase() : 'U'}
+                </div>
+                <div>
+                  <p className="font-bold text-xl text-neutral-900 dark:text-white leading-tight">{user.name}</p>
+                  <p className="text-sm text-neutral-500 dark:text-neutral-400">{user.email}</p>
+                </div>
+              </div>
+            ) : (
+                <div className="pb-6 border-b border-neutral-100 dark:border-neutral-800 flex flex-col gap-4">
+                  <p className="font-bold text-xl text-neutral-900 dark:text-white">Welcome to Tomato</p>
+                  <Link to="/login" onClick={() => setShowMobileMenu(false)} className="flex items-center justify-center gap-2 p-3 rounded-xl bg-orange-500 text-white font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/25">
+                    <User size={20} />
+                    Sign In / Sign Up
+                  </Link>
+                </div>
+            )}
+
+            {/* Location */}
+            <div className="flex items-center gap-4 px-2">
+              <div className="w-10 h-10 rounded-full bg-orange-50 dark:bg-neutral-800 flex items-center justify-center flex-shrink-0">
+                <MapPin className="text-orange-500 w-5 h-5" />
+              </div>
+              <div className="overflow-hidden">
+                <p className="font-bold text-neutral-900 dark:text-white truncate">Home - {address.title}</p>
+                <p className="text-sm text-neutral-500 truncate">{address.subtitle}</p>
               </div>
             </div>
 
-            <nav className="space-y-2">
-              {[
-                { name: 'Offers', path: '/offers', icon: Percent },
-                { name: 'Help', path: '/help', icon: HelpCircle },
-              ].map(link => (
-                <Link key={link.path} to={link.path} className="flex items-center gap-4 p-4 rounded-2xl hover:bg-neutral-50 dark:hover:bg-neutral-800 text-neutral-900 dark:text-white font-medium transition-colors" onClick={() => setShowMobileMenu(false)}>
-                  <link.icon className="text-neutral-500" />
-                  {link.name}
-                </Link>
-              ))}
-            </nav>
+            <div className="space-y-6">
+              {/* Explore */}
+              <div>
+                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3 px-2">Explore</h3>
+                <nav className="space-y-1">
+                  {[
+                    { name: 'Home', path: '/', icon: Home },
+                    { name: 'Offers & Deals', path: '/offers', icon: Percent },
+                    { name: 'Trending Now', path: '/trending', icon: Flame },
+                    { name: 'Cuisines', path: '/cuisines', icon: UtensilsCrossed },
+                  ].map(link => (
+                    <Link key={link.path} to={link.path} className={`flex items-center gap-4 p-3 rounded-xl font-semibold transition-colors group ${location.pathname === link.path ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400' : 'text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`} onClick={() => setShowMobileMenu(false)}>
+                      <link.icon className={`w-5 h-5 ${location.pathname === link.path ? 'text-orange-500' : 'text-neutral-400 group-hover:text-orange-500'} transition-colors`} />
+                      {link.name}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Company */}
+              <div>
+                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3 px-2">Company</h3>
+                <nav className="space-y-1">
+                  {[
+                    { name: 'About Us', path: '/about', icon: Users },
+                    { name: 'Contact', path: '/contact', icon: Phone },
+                    { name: 'Careers', path: '/careers', icon: Briefcase },
+                    { name: 'Partner with Us', path: '/partners', icon: Handshake },
+                  ].map(link => (
+                    <Link key={link.path} to={link.path} className={`flex items-center gap-4 p-3 rounded-xl font-semibold transition-colors group ${location.pathname === link.path ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400' : 'text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`} onClick={() => setShowMobileMenu(false)}>
+                      <link.icon className={`w-5 h-5 ${location.pathname === link.path ? 'text-orange-500' : 'text-neutral-400 group-hover:text-orange-500'} transition-colors`} />
+                      {link.name}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Legal */}
+              <div>
+                <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3 px-2">Legal</h3>
+                <nav className="space-y-1">
+                  {[
+                    { name: 'Privacy Policy', path: '/privacy', icon: Shield },
+                    { name: 'Terms & Conditions', path: '/terms', icon: FileText },
+                  ].map(link => (
+                    <Link key={link.path} to={link.path} className={`flex items-center gap-4 p-3 rounded-xl font-semibold transition-colors group ${location.pathname === link.path ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400' : 'text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`} onClick={() => setShowMobileMenu(false)}>
+                      <link.icon className={`w-5 h-5 ${location.pathname === link.path ? 'text-orange-500' : 'text-neutral-400 group-hover:text-orange-500'} transition-colors`} />
+                      {link.name}
+                    </Link>
+                  ))}
+                </nav>
+              </div>
+
+              {/* Account Pages */}
+              {isAuthenticated && user && (
+                <div>
+                  <h3 className="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-3 px-2">Account</h3>
+                  <nav className="space-y-1">
+                    {menuItems.map(item => (
+                      <Link key={item.path} to={item.path} className={`flex items-center gap-4 p-3 rounded-xl font-semibold transition-colors group ${location.pathname === item.path ? 'bg-orange-50 dark:bg-orange-900/20 text-orange-600 dark:text-orange-400' : 'text-neutral-700 dark:text-neutral-200 hover:bg-neutral-50 dark:hover:bg-neutral-800'}`} onClick={() => setShowMobileMenu(false)}>
+                        <item.icon className={`w-5 h-5 ${location.pathname === item.path ? 'text-orange-500' : 'text-neutral-400 group-hover:text-orange-500'} transition-colors`} />
+                        {item.label}
+                      </Link>
+                    ))}
+                    <button onClick={handleLogout} className="flex items-center gap-4 p-3 rounded-xl hover:bg-red-50 dark:hover:bg-red-900/10 text-red-600 font-semibold transition-colors w-full group">
+                      <LogOut className="w-5 h-5 text-red-500 group-hover:text-red-600 transition-colors" />
+                      Sign Out
+                    </button>
+                  </nav>
+                </div>
+              )}
+            </div>
+            
           </div>
         </div>
       )}

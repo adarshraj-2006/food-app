@@ -12,6 +12,13 @@ import Login from "../pages/Login/Login";
 import NotFound from "../pages/NotFound";
 import FoodDetailPage from "../pages/FoodDetail/FoodDetailPage";
 import UserHelp from "../pages/user/UserHelp";
+import Offers from "../pages/Offers/Offers";
+import Trending from "../pages/Trending/Trending";
+import Cuisines from "../pages/Cuisines/Cuisines";
+import Careers from "../pages/Careers/Careers";
+import Partners from "../pages/Partners/Partners";
+import Privacy from "../pages/Privacy/Privacy";
+import Terms from "../pages/Terms/Terms";
 
 // User Pages
 import UserDashboard from "../pages/user/UserDashboard";
@@ -43,6 +50,13 @@ const AppRoutes = () => {
       <Route path="/profile" element={<Profile />} />
       <Route path="/login" element={<Login />} />
       <Route path="/food/:id" element={<FoodDetailPage />} />
+      <Route path="/offers" element={<Offers />} />
+      <Route path="/trending" element={<Trending />} />
+      <Route path="/cuisines" element={<Cuisines />} />
+      <Route path="/careers" element={<Careers />} />
+      <Route path="/partners" element={<Partners />} />
+      <Route path="/privacy" element={<Privacy />} />
+      <Route path="/terms" element={<Terms />} />
 
       {/* User Protected Routes */}
       <Route
