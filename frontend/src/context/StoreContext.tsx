@@ -4,7 +4,8 @@ import axios from "axios";
 export const StoreContext = createContext(null);
 
 export const StoreContextProvider = (props) => {
-    const url = (import.meta.env.VITE_API_BASE_URL ).replace(/\/$/, "");
+    const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
+    const url = apiBaseUrl.replace(/\/$/, "");
     console.log("Current API URL:", url);
 
     const [food_list, setFoodList] = useState([]);
