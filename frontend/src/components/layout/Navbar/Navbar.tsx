@@ -191,7 +191,7 @@ const Navbar: React.FC = () => {
 
       {/* Menu Overlay */}
       {showMobileMenu && (
-        <div className="fixed inset-0 top-[80px] bg-white/50 backdrop-blur-sm dark:bg-neutral-900/50 z-40 overflow-y-auto border-t border-neutral-200 dark:border-neutral-800 flex justify-end" onClick={(e) => {
+        <div className="fixed inset-0 top-[80px] bg-black/40 backdrop-blur-sm z-40 overflow-y-auto border-t border-neutral-200 dark:border-neutral-800 flex justify-end" onClick={(e) => {
           if (e.target === e.currentTarget) setShowMobileMenu(false);
         }}>
           <div className="w-full max-w-sm bg-white dark:bg-neutral-900 min-h-screen p-6 space-y-8 animate-in slide-in-from-right duration-300 shadow-2xl border-l border-neutral-100 dark:border-neutral-800">
