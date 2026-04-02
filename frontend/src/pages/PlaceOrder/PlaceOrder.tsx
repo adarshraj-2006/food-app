@@ -51,7 +51,7 @@ const PlaceOrder = () => {
 
         // Razorpay Integration
         const options = {
-          key: import.meta.env.VITE_RAZORPAY_KEY_ID || "rzp_test_YourKeyHere", // Add to .env if missing
+          key: import.meta.env.RAZORPAY_KEY_ID || "rzp_test_YourKeyHere", // Add to .env if missing
           amount: amount,
           currency: currency,
           name: "Tomato",

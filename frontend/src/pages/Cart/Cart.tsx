@@ -218,7 +218,7 @@ const Cart = () => {
               </div>
 
               <button
-                onClick={() => navigate('/order')}
+                onClick={() => navigate('/place-order')}
                 className="w-full py-5 bg-red-500 text-white rounded-2xl font-black text-lg shadow-xl shadow-red-500/25 hover:bg-red-600 transition-all active:scale-95 flex items-center justify-center gap-3 group group-hover:gap-5"
               >
                 Proceed to Checkout
