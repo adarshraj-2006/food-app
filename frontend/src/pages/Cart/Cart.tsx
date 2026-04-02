@@ -1,6 +1,5 @@
 import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { useCart } from '../../components/context/CartContext/CartContext';
 import { useStore } from '../../context/StoreContext';
 import MainLayout from '../../components/layout/MainLayout/MainLayout';
 import { Trash2, Plus, Minus, Ticket, MapPin, Clock, ArrowRight, ShoppingBag } from 'lucide-react';

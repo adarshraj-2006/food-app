@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
-import { useCart } from "../../components/context/CartContext/CartContext";
 import FoodItem from "../../components/FoodItem/FoodItem";
 import Navbar from "../../components/layout/Navbar/Navbar";
 import Footer from "../../components/layout/Footer/Footer";
@@ -20,8 +19,7 @@ import {
 const FoodDetailPage = () => {
     const { id } = useParams();
     const navigate = useNavigate();
-    const { addToCart, updateQuantity, getItemQuantity } = useCart();
-    const { food_list, url } = useStore();
+    const { addToCart, removeFromCart, cartItems, food_list, url } = useStore();
     const [food, setFood] = useState<any>(null);
 
     useEffect(() => {
@@ -50,7 +48,7 @@ const FoodDetailPage = () => {
         );
     }
 
-    const quantity = getItemQuantity(food._id);
+    const quantity = cartItems[food._id] || 0;
     const recommendations = food_list
         .filter(item => item.category === food.category && item._id !== food._id)
         .slice(0, 4);
@@ -153,14 +151,14 @@ const FoodDetailPage = () => {
                                 ) : (
                                     <div className="w-full h-full bg-red-500 rounded-2xl flex items-center justify-between px-6 shadow-xl shadow-red-500/20">
                                         <button
-                                            onClick={() => updateQuantity(food._id, quantity - 1)}
+                                            onClick={() => removeFromCart(food._id)}
                                             className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
                                         >
                                             <Minus size={24} className="text-white" />
                                         </button>
                                         <span className="text-2xl font-black text-white">{quantity}</span>
                                         <button
-                                            onClick={() => updateQuantity(food._id, quantity + 1)}
+                                            onClick={() => addToCart(food._id)}
                                             className="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center hover:bg-white/30 transition-colors"
                                         >
                                             <Plus size={24} className="text-white" />

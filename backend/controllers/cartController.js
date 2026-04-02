@@ -5,7 +5,10 @@ import { successResponse, errorResponse } from "../utils/response.js";
 const addToCart = async (req, res) => {
     try {
         let userData = await userModel.findById(req.body.userId);
-        let cartData = await userData.cartData;
+        if (!userData) {
+            return errorResponse(res, "User not found", 404);
+        }
+        let cartData = userData.cartData;
         if (!cartData[req.body.itemId]) {
             cartData[req.body.itemId] = 1;
         }
@@ -24,7 +27,10 @@ const addToCart = async (req, res) => {
 const removeFromCart = async (req, res) => {
     try {
         let userData = await userModel.findById(req.body.userId);
-        let cartData = await userData.cartData;
+        if (!userData) {
+            return errorResponse(res, "User not found", 404);
+        }
+        let cartData = userData.cartData;
         if (cartData[req.body.itemId] > 0) {
             cartData[req.body.itemId] -= 1;
         }
@@ -40,7 +46,10 @@ const removeFromCart = async (req, res) => {
 const getCart = async (req, res) => {
     try {
         let userData = await userModel.findById(req.body.userId);
-        let cartData = await userData.cartData;
+        if (!userData) {
+            return errorResponse(res, "User not found", 404);
+        }
+        let cartData = userData.cartData;
         return successResponse(res, "Cart Fetched", cartData);
     } catch (error) {
         console.log(error);
