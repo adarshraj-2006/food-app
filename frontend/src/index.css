@@ -3,6 +3,27 @@
 
 @theme {
   --font-outfit: "Outfit", sans-serif;
+
+  /* Custom Color Palette overriding default Tailwind colors */
+  --color-red-500: #D22701;
+  --color-red-600: #A81E00;
+  --color-red-900: #4E070C;
+  
+  --color-orange-500: #FF670E;
+  --color-orange-600: #CC520A;
+  
+  /* Light Peach/Cream mapped to default light backgrounds used in app */
+  --color-orange-50: #FDE4CE;
+  --color-orange-100: #FCDFC5;
+  --color-red-50: #FDE4CE;
+  
+  --color-green-500: #AAD15F;
+  --color-green-600: #8AB83D;
+
+  /* Warm neutrals to fit the food theme */
+  --color-neutral-50: #FFFDF9;
+  --color-neutral-800: #382420;
+  --color-neutral-900: #261613;
 }
 
 @layer base {

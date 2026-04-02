@@ -25,38 +25,22 @@ const Cart = () => {
   const total = subtotal + deliveryFee + platformFee;
 
 
-  // Sound effect for empty cart
-  React.useEffect(() => {
-    if (activeItems.length === 0) {
-      const audio = new Audio("https://assets.mixkit.co/active_storage/sfx/2358/2358-preview.mp3");
-      audio.volume = 0.5;
-      audio.play().catch(e => console.log("Audio playback failed:", e));
-    }
-  }, [activeItems.length]);
-
   if (activeItems.length === 0) {
     return (
       <MainLayout>
-        <div className="min-h-[80vh] flex flex-col items-center justify-center p-8 text-center animate-in fade-in zoom-in duration-700">
-          <div className="relative mb-8 group">
-            <div className="absolute inset-0 bg-orange-500/20 rounded-full blur-3xl group-hover:bg-orange-500/30 transition-all duration-700"></div>
-            <img
-              src="/empty_cart_ai_figure.png"
-              alt="Nothing here"
-              className="w-64 h-64 md:w-80 md:h-80 object-contain relative z-10 animate-float"
-            />
-          </div>
-          <h2 className="text-4xl md:text-5xl font-black text-neutral-900 dark:text-white mb-4 tracking-tighter">
-            NOTHING HERE...
+        <div className="min-h-[60vh] flex flex-col items-center justify-center p-8 text-center">
+          <ShoppingBag size={64} className="text-neutral-300 dark:text-neutral-600 mb-6" />
+          <h2 className="text-2xl font-bold text-neutral-900 dark:text-white mb-2">
+            Your cart is empty
           </h2>
-          <p className="text-lg text-neutral-500 dark:text-neutral-400 mb-10 max-w-md font-medium leading-relaxed">
-            Our AI assistant noticed your cart is feeling a bit lonely. Let's fill it with some delicious joy!
+          <p className="text-neutral-500 dark:text-neutral-400 mb-8 max-w-sm">
+            Looks like you haven't added anything to your cart yet.
           </p>
           <button
             onClick={() => navigate('/')}
-            className="px-10 py-5 bg-gradient-to-r from-red-500 to-orange-500 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-orange-500/40 hover:scale-105 hover:shadow-orange-500/60 transition-all active:scale-95 flex items-center gap-3 group"
+            className="px-8 py-3 bg-red-500 text-white rounded-full font-bold hover:bg-red-600 transition-colors"
           >
-            Start Your Feast <ArrowRight size={24} className="group-hover:translate-x-2 transition-transform" />
+            Browse Menu
           </button>
         </div>
       </MainLayout>
