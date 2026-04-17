@@ -8,6 +8,7 @@ import FoodSection from '../../components/FoodSection/FoodSection';
 import OffersCarousel from '../../components/OffersCarousel/OffersCarousel';
 import AppDownload from '../../components/AppDownload/AppDownload';
 import { useStore } from "../../context/StoreContext";
+import HomeSkeleton from "../../components/Skeleton/HomeSkeleton";
 
 const Home = () => {
   const [category, setCategory] = useState("all");
@@ -33,22 +34,25 @@ const Home = () => {
         </section>
 
         {/* Contained Content Section */}
-        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px] flex flex-col gap-8 md:gap-16">
-          <section id="offers">
-            <OffersCarousel />
-          </section>
+        <div className="container mx-auto px-4 lg:px-8 max-w-[1440px]">
+          {isLoading ? (
+            <HomeSkeleton />
+          ) : (
+            <div className="flex flex-col gap-8 md:gap-16">
+              <section id="offers">
+                <OffersCarousel />
+              </section>
 
-          {/* Restaurant Section First as per user request */}
-          <section id="restaurants">
-            <RestaurantDisplay />
-          </section>
+              {/* Restaurant Section First as per user request */}
+              <section id="restaurants">
+                <RestaurantDisplay />
+              </section>
 
+              <section id="menu">
+                <ExploreMenu category={category} setCategory={setCategory} />
+              </section>
 
-          <section id="menu">
-            <ExploreMenu category={category} setCategory={setCategory} />
-          </section>
-
-          <div className="space-y-4">
+              <div className="space-y-4">
             {isLoading ? (
               <div className="py-20 flex flex-col items-center gap-4">
                 <div className="w-12 h-12 border-4 border-orange-500 border-t-transparent rounded-full animate-spin"></div>
@@ -59,54 +63,56 @@ const Home = () => {
                 </p>
               </div>
             ) : food_list.length === 0 ? (
-              <div className="py-20 text-center bg-neutral-100 dark:bg-neutral-800/50 rounded-[32px] border-2 border-dashed border-neutral-200 dark:border-neutral-700">
-                <h3 className="text-2xl font-black text-neutral-900 dark:text-white mb-2">No food items found</h3>
-                <p className="text-neutral-500">Go to the seller dashboard to add some delicious dishes!</p>
+                  <div className="py-20 text-center bg-neutral-100 dark:bg-neutral-800/50 rounded-[32px] border-2 border-dashed border-neutral-200 dark:border-neutral-700">
+                    <h3 className="text-2xl font-black text-neutral-900 dark:text-white mb-2">No food items found</h3>
+                    <p className="text-neutral-500">Go to the seller dashboard to add some delicious dishes!</p>
+                  </div>
+                ) : (
+                  <>
+                    <section id="popular">
+                      <FoodSection title="Popular Dishes" items={topRated} />
+                    </section>
+
+                    <section id="rolls">
+                      <FoodSection title="Quick Rolls" items={rolls} />
+                    </section>
+
+                    <section id="pure-veg">
+                      <FoodSection title="Pure Veg Delights" items={pureVeg} />
+                    </section>
+
+                    <section id="noodles">
+                      <FoodSection title="Wok-tastic Noodles" items={noodles} />
+                    </section>
+
+                    <section id="salads">
+                      <FoodSection title="Fresh Salads" items={salads} />
+                    </section>
+
+                    <section id="sandwich">
+                      <FoodSection title="Gourmet Sandwiches" items={sandwich} />
+                    </section>
+
+                    <section id="deserts">
+                      <FoodSection title="Sweet Deserts" items={deserts} />
+                    </section>
+
+                    <section id="cakes">
+                      <FoodSection title="Deluxe Cakes" items={cakes} />
+                    </section>
+
+                    <section id="pasta">
+                      <FoodSection title="Italian Pasta" items={pasta} />
+                    </section>
+
+                    <section id="food-list">
+                      <FoodDisplay category={category} />
+                    </section>
+                  </>
+                )}
               </div>
-            ) : (
-              <>
-                <section id="popular">
-                  <FoodSection title="Popular Dishes" items={topRated} />
-                </section>
-
-                <section id="rolls">
-                  <FoodSection title="Quick Rolls" items={rolls} />
-                </section>
-
-                <section id="pure-veg">
-                  <FoodSection title="Pure Veg Delights" items={pureVeg} />
-                </section>
-
-                <section id="noodles">
-                  <FoodSection title="Wok-tastic Noodles" items={noodles} />
-                </section>
-
-                <section id="salads">
-                  <FoodSection title="Fresh Salads" items={salads} />
-                </section>
-
-                <section id="sandwich">
-                  <FoodSection title="Gourmet Sandwiches" items={sandwich} />
-                </section>
-
-                <section id="deserts">
-                  <FoodSection title="Sweet Deserts" items={deserts} />
-                </section>
-
-                <section id="cakes">
-                  <FoodSection title="Deluxe Cakes" items={cakes} />
-                </section>
-
-                <section id="pasta">
-                  <FoodSection title="Italian Pasta" items={pasta} />
-                </section>
-
-                <section id="food-list">
-                  <FoodDisplay category={category} />
-                </section>
-              </>
-            )}
-          </div>
+            </div>
+          )}
         </div>
 
 

@@ -1,0 +1,48 @@
+.skeleton {
+    background: linear-gradient(
+        90deg, 
+        #f0f0f0 25%, 
+        #e0e0e0 50%, 
+        #f0f0f0 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite linear;
+}
+
+.dark .skeleton {
+    background: linear-gradient(
+        90deg, 
+        #262626 25%, 
+        #333333 50%, 
+        #262626 75%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s infinite linear;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton-text {
+    height: 1rem;
+    margin-bottom: 0.5rem;
+    border-radius: 4px;
+}
+
+.skeleton-circular {
+    border-radius: 50%;
+}
+
+.skeleton-rectangular {
+    border-radius: 0;
+}
+
+.skeleton-rounded {
+    border-radius: 12px;
+}
